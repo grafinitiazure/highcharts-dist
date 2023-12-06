@@ -1,9 +1,339 @@
 /**
- * Highcharts JS v11.2.0 (2023-10-30)
+ * @license Highcharts JS v9dfd540b391e007046661b7b9fd5c056acc548af (2023-11-17)
  *
  * Mousewheel zoom module
  *
  * (c) 2023 Askel Eirik Johansson
  *
  * License: www.highcharts.com/license
- */!function(t){"object"==typeof module&&module.exports?(t.default=t,module.exports=t):"function"==typeof define&&define.amd?define("highcharts/modules/mouse-wheel-zoom",["highcharts"],function(e){return t(e),t.Highcharts=e,t}):t("undefined"!=typeof Highcharts?Highcharts:void 0)}(function(t){"use strict";var e=t?t._modules:{};function n(t,e,n,i){t.hasOwnProperty(e)||(t[e]=i.apply(null,n),"function"==typeof CustomEvent&&window.dispatchEvent(new CustomEvent("HighchartsModuleLoaded",{detail:{path:e,module:t[e]}})))}n(e,"Extensions/Annotations/NavigationBindingsUtilities.js",[e["Core/Utilities.js"]],function(t){let{defined:e,isNumber:n,pick:i}=t,o={backgroundColor:"string",borderColor:"string",borderRadius:"string",color:"string",fill:"string",fontSize:"string",labels:"string",name:"string",stroke:"string",title:"string"};return{annotationsFieldsTypes:o,getAssignedAxis:function(t){return t.filter(t=>{let e=t.axis.getExtremes(),o=e.min,s=e.max,r=i(t.axis.minPointOffset,0);return n(o)&&n(s)&&t.value>=o-r&&t.value<=s+r&&!t.axis.options.isInternal})[0]},getFieldType:function(t,n){let i=o[t],s=typeof n;return e(i)&&(s=i),({string:"text",number:"number",boolean:"checkbox"})[s]}}}),n(e,"Extensions/MouseWheelZoom/MouseWheelZoom.js",[e["Core/Utilities.js"],e["Extensions/Annotations/NavigationBindingsUtilities.js"]],function(t,e){let n,i,o;let{addEvent:s,isObject:r,pick:a,defined:l,merge:u,isNumber:d}=t,{getAssignedAxis:m}=e,c=[],h={enabled:!0,sensitivity:1.1},g=t=>r(t)?u(h,t):u(h,{enabled:!l(t)||t}),f=(t,e,n,i)=>(n+i>t+e&&(i>e?(i=e,n=t):n=t+e-i),i>e&&(i=e),n<t&&(n=t),{rangeStart:n,rangeWidth:i}),p=function(t){let e=t.options;l(n)&&clearTimeout(n),l(i)||(i=e.startOnTick,o=e.endOnTick),(i||o)&&(e.startOnTick=!1,e.endOnTick=!1),n=setTimeout(()=>{if(l(i)&&l(o)){e.startOnTick=i,e.endOnTick=o;let{min:n,max:s}=t.getExtremes();t.forceRedraw=!0,t.setExtremes(n,s),i=o=void 0}},400)},x=function(t,e,n){if(!l(n))return .5;let i=(n-e.pos)/e.len,o=e.isXAxis;return o&&!e.reversed!=!t.inverted||!o&&e.reversed?1-i:i},v=function(t,e,n,i,o){let s=e.isXAxis,r=!1;if(l(e.max)&&l(e.min)&&l(e.dataMax)&&l(e.dataMin)){s||p(e);let u=e.max-e.min,m=d(o)?o:e.min+u/2,c=x(t,e,n),h=u*i,g=m-h*c,v=a(e.options.max,e.dataMax)-a(e.options.min,e.dataMin),y=e.options.min?0:v*e.options.minPadding,b=e.options.max?0:v*e.options.maxPadding,E=a(e.options.min,e.dataMin)-y,C=v+b+y,M=f(E,C,g,h),w=M.rangeStart<a(e.options.min,E)||M.rangeStart===e.min&&M.rangeWidth>C&&M.rangeStart+M.rangeWidth<a(e.options.max,Number.MIN_VALUE)||M.rangeWidth===e.max-e.min;l(i)&&!w?(e.setExtremes(M.rangeStart,M.rangeStart+M.rangeWidth,!1),r=!0):e.setExtremes(void 0,void 0,!1)}return r},y=function(t,e,n,i,o,s,r){let l=a(r.type,t.zooming.type,""),u=/x/.test(l),d=/y/.test(l),m=n.toValue(o),c=i.toValue(s);if(t.inverted){let t=i.pos+i.len;m=n.toValue(s),c=i.toValue(o);let e=o;o=s,s=t-e+i.pos}let h=u&&v(t,n,o,e,m),g=d&&v(t,i,s,e,c),f=h||g;return f&&t.redraw(!1),f};function b(){let t=this,e=g(t.zooming.mouseWheel);e.enabled&&s(this.container,"wheel",n=>{n=this.pointer.normalize(n);let i=!t.pointer.inClass(n.target,"highcharts-no-mousewheel");if(t.isInsidePlot(n.chartX-t.plotLeft,n.chartY-t.plotTop)&&i){let i=e.sensitivity||1.1,o=n.detail||(n.deltaY||0)/120,s=m(this.pointer.getCoordinates(n).xAxis),r=m(this.pointer.getCoordinates(n).yAxis),a=y(t,Math.pow(i,o),s?s.axis:t.xAxis[0],r?r.axis:t.yAxis[0],n.chartX,n.chartY,e);a&&n.preventDefault&&n.preventDefault()}})}return{compose:function(t){-1===c.indexOf(t)&&(c.push(t),s(t,"afterGetContainer",b))}}}),n(e,"masters/modules/mouse-wheel-zoom.src.js",[e["Core/Globals.js"],e["Extensions/MouseWheelZoom/MouseWheelZoom.js"]],function(t,e){e.compose(t.Chart)})});//# sourceMappingURL=mouse-wheel-zoom.js.map
+ */
+(function (factory) {
+    if (typeof module === 'object' && module.exports) {
+        factory['default'] = factory;
+        module.exports = factory;
+    } else if (typeof define === 'function' && define.amd) {
+        define('highcharts/modules/mouse-wheel-zoom', ['highcharts'], function (Highcharts) {
+            factory(Highcharts);
+            factory.Highcharts = Highcharts;
+            return factory;
+        });
+    } else {
+        factory(typeof Highcharts !== 'undefined' ? Highcharts : undefined);
+    }
+}(function (Highcharts) {
+    'use strict';
+    var _modules = Highcharts ? Highcharts._modules : {};
+    function _registerModule(obj, path, args, fn) {
+        if (!obj.hasOwnProperty(path)) {
+            obj[path] = fn.apply(null, args);
+
+            if (typeof CustomEvent === 'function') {
+                window.dispatchEvent(new CustomEvent(
+                    'HighchartsModuleLoaded',
+                    { detail: { path: path, module: obj[path] } }
+                ));
+            }
+        }
+    }
+    _registerModule(_modules, 'Extensions/Annotations/NavigationBindingsUtilities.js', [_modules['Core/Utilities.js']], function (U) {
+        /* *
+         *
+         *  (c) 2009-2021 Highsoft, Black Label
+         *
+         *  License: www.highcharts.com/license
+         *
+         *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+         *
+         * */
+        var defined = U.defined, isNumber = U.isNumber, pick = U.pick;
+        /* *
+         *
+         *  Constants
+         *
+         * */
+        /**
+         * Define types for editable fields per annotation. There is no need to define
+         * numbers, because they won't change their type to string.
+         * @private
+         */
+        var annotationsFieldsTypes = {
+            backgroundColor: 'string',
+            borderColor: 'string',
+            borderRadius: 'string',
+            color: 'string',
+            fill: 'string',
+            fontSize: 'string',
+            labels: 'string',
+            name: 'string',
+            stroke: 'string',
+            title: 'string'
+        };
+        /* *
+         *
+         *  Functions
+         *
+         * */
+        /**
+         * Returns the first xAxis or yAxis that was clicked with its value.
+         *
+         * @private
+         *
+         * @param {Array<Highcharts.PointerAxisCoordinateObject>} coords
+         *        All the chart's x or y axes with a current pointer's axis value.
+         *
+         * @return {Highcharts.PointerAxisCoordinateObject}
+         *         Object with a first found axis and its value that pointer
+         *         is currently pointing.
+         */
+        function getAssignedAxis(coords) {
+            return coords.filter(function (coord) {
+                var extremes = coord.axis.getExtremes(), axisMin = extremes.min, axisMax = extremes.max, 
+                // Correct axis edges when axis has series
+                // with pointRange (like column)
+                minPointOffset = pick(coord.axis.minPointOffset, 0);
+                return isNumber(axisMin) && isNumber(axisMax) &&
+                    coord.value >= (axisMin - minPointOffset) &&
+                    coord.value <= (axisMax + minPointOffset) &&
+                    // don't count navigator axis
+                    !coord.axis.options.isInternal;
+            })[0]; // If the axes overlap, return the first axis that was found.
+        }
+        /**
+         * Get field type according to value
+         *
+         * @private
+         *
+         * @param {'boolean'|'number'|'string'} value
+         * Atomic type (one of: string, number, boolean)
+         *
+         * @return {'checkbox'|'number'|'text'}
+         * Field type (one of: text, number, checkbox)
+         */
+        function getFieldType(key, value) {
+            var predefinedType = annotationsFieldsTypes[key];
+            var fieldType = typeof value;
+            if (defined(predefinedType)) {
+                fieldType = predefinedType;
+            }
+            return {
+                'string': 'text',
+                'number': 'number',
+                'boolean': 'checkbox'
+            }[fieldType];
+        }
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+        var NavigationBindingUtilities = {
+            annotationsFieldsTypes: annotationsFieldsTypes,
+            getAssignedAxis: getAssignedAxis,
+            getFieldType: getFieldType
+        };
+
+        return NavigationBindingUtilities;
+    });
+    _registerModule(_modules, 'Extensions/MouseWheelZoom/MouseWheelZoom.js', [_modules['Core/Utilities.js'], _modules['Extensions/Annotations/NavigationBindingsUtilities.js']], function (U, NBU) {
+        /* *
+         *
+         *  (c) 2023 Torstein Honsi, Askel Eirik Johansson
+         *
+         *  License: www.highcharts.com/license
+         *
+         *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+         *
+         * */
+        var addEvent = U.addEvent, isObject = U.isObject, pick = U.pick, defined = U.defined, merge = U.merge;
+        var getAssignedAxis = NBU.getAssignedAxis;
+        /* *
+         *
+         *  Constants
+         *
+         * */
+        var composedClasses = [], defaultOptions = {
+            enabled: true,
+            sensitivity: 1.1
+        };
+        var wheelTimer;
+        /* *
+         *
+         *  Functions
+         *
+         * */
+        /**
+         * @private
+         */
+        var optionsToObject = function (options) {
+            if (!isObject(options)) {
+                options = {
+                    enabled: options !== null && options !== void 0 ? options : true
+                };
+            }
+            return merge(defaultOptions, options);
+        };
+        /**
+         * @private
+         */
+        var zoomBy = function (chart, howMuch, xAxis, yAxis, mouseX, mouseY, options) {
+            var type = pick(options.type, chart.zooming.type, '');
+            var axes = [];
+            if (type === 'x') {
+                axes = xAxis;
+            }
+            else if (type === 'y') {
+                axes = yAxis;
+            }
+            else if (type === 'xy') {
+                axes = chart.axes;
+            }
+            var hasZoomed = chart.transform({
+                axes: axes,
+                // Create imaginary reference and target rectangles around the mouse
+                // point that scales up or down with `howMuch`;
+                to: {
+                    x: mouseX - 5,
+                    y: mouseY - 5,
+                    // Must use 10 to get passed the limit for too small reference.
+                    // Below this, the transform will default to a pan.
+                    width: 10,
+                    height: 10
+                },
+                from: {
+                    x: mouseX - 5 * howMuch,
+                    y: mouseY - 5 * howMuch,
+                    width: 10 * howMuch,
+                    height: 10 * howMuch
+                }
+            });
+            if (hasZoomed) {
+                if (defined(wheelTimer)) {
+                    clearTimeout(wheelTimer);
+                }
+                // Some time after the last mousewheel event, run drop. In case any of
+                // the affected axes had `startOnTick` or `endOnTick`, they will be
+                // re-adjusted now.
+                wheelTimer = setTimeout(function () {
+                    var _a;
+                    (_a = chart.pointer) === null || _a === void 0 ? void 0 : _a.drop();
+                }, 400);
+            }
+            return hasZoomed;
+        };
+        /**
+         * @private
+         */
+        function onAfterGetContainer() {
+            var _this = this;
+            var chart = this, wheelZoomOptions = optionsToObject(chart.zooming.mouseWheel);
+            if (wheelZoomOptions.enabled) {
+                addEvent(this.container, 'wheel', function (e) {
+                    var _a;
+                    e = _this.pointer.normalize(e);
+                    var allowZoom = !chart.pointer.inClass(e.target, 'highcharts-no-mousewheel');
+                    // Firefox uses e.detail, WebKit and IE uses deltaX, deltaY, deltaZ.
+                    if (chart.isInsidePlot(e.chartX - chart.plotLeft, e.chartY - chart.plotTop) && allowZoom) {
+                        var wheelSensitivity = wheelZoomOptions.sensitivity || 1.1, delta = e.detail || ((e.deltaY || 0) / 120), xAxisCoords = getAssignedAxis(_this.pointer.getCoordinates(e).xAxis), yAxisCoords = getAssignedAxis(_this.pointer.getCoordinates(e).yAxis);
+                        var hasZoomed = zoomBy(chart, Math.pow(wheelSensitivity, delta), xAxisCoords ? [xAxisCoords.axis] : chart.xAxis, yAxisCoords ? [yAxisCoords.axis] : chart.yAxis, e.chartX, e.chartY, wheelZoomOptions);
+                        // Prevent page scroll
+                        if (hasZoomed) {
+                            (_a = e.preventDefault) === null || _a === void 0 ? void 0 : _a.call(e);
+                        }
+                    }
+                });
+            }
+        }
+        /**
+         * @private
+         */
+        function compose(ChartClass) {
+            if (composedClasses.indexOf(ChartClass) === -1) {
+                composedClasses.push(ChartClass);
+                addEvent(ChartClass, 'afterGetContainer', onAfterGetContainer);
+            }
+        }
+        /* *
+         *
+         *  Default Export
+         *
+         * */
+        var MouseWheelZoomComposition = {
+            compose: compose
+        };
+        /* *
+         *
+         *  API Options
+         *
+         * */
+        /**
+         * The mouse wheel zoom is a feature included in Highcharts Stock, but is also
+         * available for Highcharts Core as a module. Zooming with the mouse wheel is
+         * enabled by default in Highcharts Stock. In Highcharts Core it is enabled if
+         * [chart.zooming.type](chart.zooming.type) is set. It can be disabled by
+         * setting this option to `false`.
+         *
+         * @type      {boolean|object}
+         * @since 11.1.0
+         * @requires  modules/mouse-wheel-zoom
+         * @sample    {highcharts} highcharts/mouse-wheel-zoom/enabled
+         *            Enable or disable
+         * @sample    {highstock} stock/mouse-wheel-zoom/enabled
+         *            Enable or disable
+         * @apioption chart.zooming.mouseWheel
+         */
+        /**
+         * Zooming with the mouse wheel can be disabled by setting this option to
+         * `false`.
+         *
+         * @type      {boolean}
+         * @default   true
+         * @since 11.1.0
+         * @requires  modules/mouse-wheel-zoom
+         * @apioption chart.zooming.mouseWheel.enabled
+         */
+        /**
+         * Adjust the sensitivity of the zoom. Sensitivity of mouse wheel or trackpad
+         * scrolling. `1` is no sensitivity, while with `2`, one mouse wheel delta will
+         * zoom in `50%`.
+         *
+         * @type      {number}
+         * @default   1.1
+         * @since 11.1.0
+         * @requires  modules/mouse-wheel-zoom
+         * @sample    {highcharts} highcharts/mouse-wheel-zoom/sensitivity
+         *            Change mouse wheel zoom sensitivity
+         * @sample    {highstock} stock/mouse-wheel-zoom/sensitivity
+         *            Change mouse wheel zoom sensitivity
+         * @apioption chart.zooming.mouseWheel.sensitivity
+         */
+        /**
+         * Decides in what dimensions the user can zoom scrolling the wheel. Can be one
+         * of `x`, `y` or `xy`. In Highcharts Core, if not specified here, it will
+         * inherit the type from [chart.zooming.type](chart.zooming.type). In Highcharts
+         * Stock, it defaults to `x`.
+         *
+         * Note that particularly with mouse wheel in the y direction, the zoom is
+         * affected by the default [yAxis.startOnTick](#yAxis.startOnTick) and
+         * [endOnTick]((#yAxis.endOnTick)) settings. In order to respect these settings,
+         * the zoom level will adjust after the user has stopped zooming. To prevent
+         * this, consider setting `startOnTick` and `endOnTick` to `false`.
+         *
+         * @type      {string}
+         * @default   {highcharts} undefined
+         * @default   {highstock} x
+         * @validvalue ["x", "y", "xy"]
+         * @since 11.1.0
+         * @requires  modules/mouse-wheel-zoom
+         * @apioption chart.zooming.mouseWheel.type
+         */
+        (''); // Keeps doclets above in JS file
+
+        return MouseWheelZoomComposition;
+    });
+    _registerModule(_modules, 'masters/modules/mouse-wheel-zoom.src.js', [_modules['Core/Globals.js'], _modules['Extensions/MouseWheelZoom/MouseWheelZoom.js']], function (Highcharts, MouseWheelZoom) {
+
+        var G = Highcharts;
+        MouseWheelZoom.compose(G.Chart);
+
+    });
+}));
